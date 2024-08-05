@@ -13,12 +13,12 @@ from telethon.errors import QueryIdInvalidError
 from telethon.events import CallbackQuery, InlineQuery
 from telethon.tl.functions.users import GetUsersRequest
 
-from SedUb import l313l
-from SedUb.Config import Config
-from SedUb.helpers import reply_id
-from SedUb.sql_helper.globals import gvarstatus
-from SedUb.core.logger import logging
-from SedUb.helpers.utils import _format
+from . import zedub
+from ..Config import Config
+from ..helpers import reply_id
+from ..sql_helper.globals import gvarstatus
+from ..core.logger import logging
+from ..helpers.utils import _format
 from . import mention
 
 LOGS = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ ddd = "💌"
 bbb = None
 
 # 
-@l313l.tgbot.on(InlineQuery)
+@zedub.tgbot.on(InlineQuery)
 async def inline_handler(event):
     builder = event.builder
     result = None
