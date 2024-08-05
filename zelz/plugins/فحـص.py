@@ -16,69 +16,54 @@ from telethon.errors.rpcerrorlist import (
     WebpageMediaEmptyError,
 )
 
-from SedUb import StartTime, l313l, zedversion
-from SedUb.Config import Config
-from SedUb.helpers.functions import zedalive, check_data_base_heal_th, get_readable_time
-from SedUb.helpers.utils import reply_id
-from SedUb.core.logger import logging
-from SedUb.helpers.utils import _format
-from SedUb.sql_helper.globals import addgvar, delgvar, gvarstatus
-from SedUb.core.managers import edit_delete, edit_or_reply
-from SedUb.core.logger import logging
-from SedUb import BOTLOG, BOTLOG_CHATID, mention
+from . import StartTime, zedub, zedversion
+from ..Config import Config
+from ..helpers.functions import zedalive, check_data_base_heal_th, get_readable_time
+from ..helpers.utils import reply_id
+from ..core.logger import logging
+from ..helpers.utils import _format
+from ..sql_helper.globals import addgvar, delgvar, gvarstatus
+from ..core.managers import edit_delete, edit_or_reply
+from ..core.logger import logging
+from . import BOTLOG, BOTLOG_CHATID, mention
 
 Zel_Uid = zedub.uid
 zed_dev = (72918694169, 7291869416, 7291869416, 7291869416, 7291869416, 7291869416, 7291869416, 7291869416, 7291869416, 7291869416, 7291869416, 7291869416)
 LOGS = logging.getLogger(__name__)
 vocself = True
 
-@l313l.ar_cmd(pattern="(تفعيل البصمه الذاتيه|تفعيل البصمه الذاتية|تفعيل البصمة الذاتيه|تفعيل البصمة الذاتية)")
+@zedub.zed_cmd(pattern="(تفعيل البصمه الذاتيه|تفعيل البصمه الذاتية|تفعيل البصمة الذاتيه|تفعيل البصمة الذاتية)")
 async def start_datea(event):
     global vocself
-    if gvarstatus("ZThon_Vip") is None:
-        return await edit_or_reply(event, "**⎉╎عـذࢪاً .. ؏ـزيـزي\n⎉╎هـذا الامـر ليـس مجـانـي📵\n⎉╎للاشتـراك في الاوامـر المدفوعـة\n⎉╎تواصـل مطـور السـورس @BDB0B\n⎉╎او التواصـل مـع احـد المشرفيـن @BDB0B**")
-    zid = int(gvarstatus("ZThon_Vip"))
-    if Zel_Uid != zid:
-        return
+    # إزالة تحقق الاشتراك المدفوع
     if vocself:
         return await edit_or_reply(event, "**⎉╎حفظ البصمه الذاتية التلقائي 🎙**\n**⎉╎مفعلـه .. مسبقـاً ✅**")
     vocself = True
     await edit_or_reply(event, "**⎉╎تم تفعيل حفظ البصمه الذاتية 🎙**\n**⎉╎تلقائياً .. بنجاح ✅**")
 
-@l313l.ar_cmd(pattern="(تعطيل البصمه الذاتيه|تعطيل البصمه الذاتية|تعطيل البصمة الذاتيه|تعطيل البصمة الذاتية)")
+@zedub.zed_cmd(pattern="(تعطيل البصمه الذاتيه|تعطيل البصمه الذاتية|تعطيل البصمة الذاتيه|تعطيل البصمة الذاتية)")
 async def stop_datea(event):
     global vocself
-    if gvarstatus("ZThon_Vip") is None:
-        return await edit_or_reply(event, "**⎉╎عـذࢪاً .. ؏ـزيـزي\n⎉╎هـذا الامـر ليـس مجـانـي📵\n⎉╎للاشتـراك في الاوامـر المدفوعـة\n⎉╎تواصـل مطـور السـورس @BDB0B\n⎉╎او التواصـل مـع احـد المشرفيـن @BDB0B**")
-    zid = int(gvarstatus("ZThon_Vip"))
-    if Zel_Uid != zid:
-        return
+    # إزالة تحقق الاشتراك المدفوع
     if vocself:
         vocself = False
         return await edit_or_reply(event, "**⎉╎تم تعطيل حفظ البصمه الذاتية 🎙**\n**⎉╎الان صارت مو شغالة .. ✅**")
     await edit_or_reply(event, "**⎉╎حفظ البصمه الذاتية التلقائي 🎙**\n**⎉╎معطلـه .. مسبقـاً ✅**")
 
-@l313l.on(events.NewMessage(func=lambda e: e.is_private and (e.audio or e.voice) and e.media_unread))
+@zedub.on(events.NewMessage(func=lambda e: e.is_private and (e.audio or e.voice) and e.media_unread))
 async def sddm(event):
     global vocself
-    if gvarstatus("ZThon_Vip") is None:
-        return
-    zelzal = event.sender_id
-    malath = zedub.uid
-    if zelzal == malath:
-        return
-    zid = int(gvarstatus("ZThon_Vip"))
-    if Zel_Uid != zid:
-        return
+    # إزالة تحقق الاشتراك المدفوع
     if vocself:
         sender = await event.get_sender()
         username = f"@{sender.username}" if sender.username else "لا يوجد"
         chat = await event.get_chat()
         voc = await event.download_media()
-        await zedub.send_file("me", voc, caption=f"[ᯓ 𝙈𝙖𝙏𝙍𝙞𝙭 ⌁ - حفـظ البصمه الذاتيه 🎙](t.me/veevvw)\n⋆─┄─┄─┄─┄─┄─┄─⋆\n**⌔ مࢪحبـاً .. عـزيـزي 🫂\n⌔ تـم حفظ البصمه الذاتية .. تلقائياً ☑️** ❝\n**⌔ معلومـات المـرسـل :-**\n**• الاسم :** {_format.mentionuser(sender.first_name , sender.id)}\n**• اليوزر :** {username}\n**• الايدي :** `{sender.id}`")
+        await zedub.send_file("me", voc, caption=f"[ᯓ 𝙈𝙖𝙏𝙍𝙞𝙭 ⌁ - حفـظ البصمه الذاتيه 🎙](t.me/veevvw)\n⋆─┄─┄─┄─┄─┄─┄─⋆\n**⌔ مࢪحبـاً .. عـزيـزي 🫂\n⌔ تـم حفظ البصمه الذاتية .. تلقائياً ☑️** ❝\n**⌔ معلومـات المـرسـل :-**\n**• الاسم :** {_format.mentionuser(sender.first_name , sender.id)}\n**• اليوزر :** {username}\n**• الايدي :** {sender.id}")
 
 
-@l313l.on(events.NewMessage(pattern="/vip"))
+
+@zedub.on(events.NewMessage(pattern="/vip"))
 async def _(event):
     if not event.is_private:
         return
@@ -94,7 +79,7 @@ async def _(event):
                 addgvar("ZThon_Vip", owner_id)
 
 
-@l313l.on(events.NewMessage(pattern="/zip"))
+@zedub.on(events.NewMessage(pattern="/zip"))
 async def _(event):
     if not event.is_private:
         return
@@ -107,7 +92,7 @@ async def _(event):
             addgvar("ZThon_Vip", Zel_Uid)
 
 
-@l313l.on(events.NewMessage(pattern="/dip"))
+@zedub.on(events.NewMessage(pattern="/dip"))
 async def _(event):
     if not event.is_private:
         return
@@ -120,7 +105,7 @@ async def _(event):
             await event.reply(f"**- مرحبـاً .. مطـوري** [{user.first_name}](tg://user?id={user.id}) 🧞‍♂\n**- الحساب ليس مرفوع بعـد 🧌**")
 
 
-@l313l.on(events.NewMessage(pattern="/live"))
+@zedub.on(events.NewMessage(pattern="/live"))
 async def zalive(event):
     if not event.is_private:
         return
@@ -233,13 +218,8 @@ ids = await get_private_chat_ids(usernames)
 # بعد ذلك يمكنك استخدام ids للتحقق من حالة online وإرسال التنبيهات
 
 
-@l313l.ar_cmd(pattern="تفعيل الكاشف الذكي")
+@zedub.zed_cmd(pattern="تفعيل الكاشف الذكي")
 async def start_zelzali(event):
-    if gvarstatus("ZThon_Vip") is None:
-        return await edit_or_reply(event, "**⎉╎عـذࢪاً .. ؏ـزيـزي\n⎉╎هـذا الامـر ليـس مجـانـي📵\n⎉╎للاشتـراك في الاوامـر المدفوعـة\n⎉╎تواصـل مطـور السـورس @BDB0B\n⎉╎او التواصـل مـع احـد المشرفيـن @BDB0B**")
-    zid = int(gvarstatus("ZThon_Vip"))
-    if Zel_Uid != zid:
-        return await edit_or_reply(event, "**⎉╎عـذࢪاً .. ؏ـزيـزي\n⎉╎هـذا الامـر ليـس مجـانـي📵\n⎉╎للاشتـراك في الاوامـر المدفوعـة\n⎉╎تواصـل مطـور السـورس @BDB0B\n⎉╎او التواصـل مـع احـد المشرفيـن @BDB0B**")
     ZAZ = gvarstatus("ZAZ") and gvarstatus("ZAZ") != "false"
     if ZAZ:
         privacy_settings = types.InputPrivacyValueAllowAll()
@@ -253,40 +233,23 @@ async def start_zelzali(event):
         await zedub(functions.account.SetPrivacyRequest(key=privacy_key, rules=[privacy_settings]))
         await asyncio.sleep(2)
         addgvar("ZAZ", True)
-        #addgvar("UIU", uid)
         await edit_or_reply(event, "**⎉╎تم تفعيـل إشعـارات الحالـة (متصـل) .. بنجـاح ☑️**")
 
-@l313l.ar_cmd(pattern="(تعطيل الكاشف الذكي|تعطيل اشعارات الحالة)")
+@zedub.zed_cmd(pattern="(تعطيل الكاشف الذكي|تعطيل اشعارات الحالة)")
 async def stop_zelzali(event):
-    if gvarstatus("ZThon_Vip") is None:
-        return await edit_or_reply(event, "**⎉╎عـذࢪاً .. ؏ـزيـزي\n⎉╎هـذا الامـر ليـس مجـانـي📵\n⎉╎للاشتـراك في الاوامـر المدفوعـة\n⎉╎تواصـل مطـور السـورس @BDB0B\n⎉╎او التواصـل مـع احـد المشرفيـن @BDB0B**")
-    zid = int(gvarstatus("ZThon_Vip"))
-    if Zel_Uid != zid:
-        return await edit_or_reply(event, "**⎉╎عـذࢪاً .. ؏ـزيـزي\n⎉╎هـذا الامـر ليـس مجـانـي📵\n⎉╎للاشتـراك في الاوامـر المدفوعـة\n⎉╎تواصـل مطـور السـورس @BDB0B\n⎉╎او التواصـل مـع احـد المشرفيـن @BDB0B**")
     ZAZ = gvarstatus("ZAZ") and gvarstatus("ZAZ") != "false"
     if ZAZ:
         addgvar("ZAZ", False)
-        #delgvar("UIU")
         await edit_or_reply(event, "**⎉╎تم تعطيـل إشعـارات الحالـة (متصـل) .. بنجـاح ☑️**")
     else:
         await edit_or_reply(event, "**⎉╎إشعـارات الحالـة (متصـل) .. معطلـه مسبقـاً ☑️**")
 
-@l313l.on(events.UserUpdate)
+@zedub.on(events.UserUpdate)
 async def zelzal_online_ai(event):
-    if gvarstatus("ZThon_Vip") is None:
-        return
-    zid = int(gvarstatus("ZThon_Vip"))
-    if Zel_Uid != zid:
-        return
     if gvarstatus("ZAZ") == "false":
         return
     if gvarstatus("ZAZ") is None:
         return
-    #private_chat_ids = await get_private_chat_ids(limit=50)
-    #username = gvarstatus("UIU")
-    #user = await zedub.get_entity(username)
-    #user_id = user.id
-    #if event.user_id == user_id:
     private_chat_ids = await get_all_private_chat_ids(limit=20)
     if event.user_id in private_chat_ids and event.user_id != zedub.uid:
         if event.online:
@@ -300,103 +263,33 @@ async def zelzal_online_ai(event):
                 zaz += f'<a href="tg://user?id={user.id}">{full_name}</a>'
                 zaz += f"\n<b>⌔┊اصبـح متصـل الان ⦿</b>"
                 await zedub.send_message(Config.PM_LOGGER_GROUP_ID, zaz, parse_mode="html")
-                    #f"<b>⌔┊الحسـاب :</b> <a href='tg://user?id={user.id}'>{full_name}</a>\n<b>⌔┊اصبـح متصـل الان ⦿</b>",
-                #)
 
 
-@l313l.ar_cmd(pattern="المتصليين?(.*)")
+
+@zedub.zed_cmd(pattern="المتصليين?(.*)")
 async def _(e):
     if e.is_private:
-        return await edit_or_reply(e, "**- عـذراً ... هـذه ليـست مجمـوعـة ؟!**")
-    if Zel_Uid not in Zed_Vip:
-        return await edit_or_reply(e, "**⎉╎عـذࢪاً .. ؏ـزيـزي\n⎉╎هـذا الامـر ليـس مجـانـي📵\n⎉╎للاشتـراك في الاوامـر المدفوعـة\n⎉╎تواصـل مطـور السـورس @BDB0B\n⎉╎او التواصـل مـع احـد المشرفيـن @BDB0B**")
+        return await edit_or_reply(e, "**- عـذراً ... هـذه ليـست مجمـوعة ؟!**")
+    
     chat = await e.get_chat()
     if not chat.admin_rights and not chat.creator:
         await edit_or_reply(e, "**- عـذراً ... يجب ان تكـون مشرفـاً هنـا ؟!**")
         return False
+    
     zel = await edit_or_reply(e, "**- جـارِ الكشـف اونـلايـن ...**")
     zzz = e.pattern_match.group(1)
     o = 0
     zilzali = "𓆩 [𝗦𝗼𝘂𝗿𝗰𝗲 𝙈𝙖𝙏𝙍𝙞𝙭 ⌁ - 🝢 - الڪـٓاشـف الذڪـٓي](t.me/veevvw) 𓆪\n⋆┄─┄─┄─┄┄─┄─┄─┄─┄┄⋆\n**- تـم انتهـاء الكشـف .. بنجـاح ✅**\n**- قائمـة بعـدد الاعضـاء المتصليـن واسمائـهـم :**\n"
     xx = f"{zzz}" if zzz else zilzali
     zed = await e.client.get_participants(e.chat_id, limit=99)
+    
     for users, bb in enumerate(zed):
         x = bb.status
-        y = bb.participant
         if isinstance(x, onn):
             o += 1
             xx += f"\n- [{get_display_name(bb)}](tg://user?id={bb.id})"
+    
     await e.client.send_message(e.chat_id, xx)
     await zel.delete()
 
 
-ZelzalVip_Orders = (
-"[ᯓ 𝙈𝙖𝙏𝙍𝙞𝙭 ⌁ 𝗩𝗶𝗽 🌟 الاوامــر المـدفـوعـة](t.me/veevvw) .\n"
-"⋆┄─┄─┄─┄┄─┄─┄─┄─┄┄⋆\n"
-"**✾╎قـائمـة الاوامـر المـدفـوعـة الخاصـة بسـورس ماتركـس :** \n\n"
-"`.هاك`\n"
-"**⪼ لـ عـرض اوامـر الاختـراق عبـر كـود تيرمكـس ☠**\n"
-"**⪼ الاختـراق يدعـم كود تليثـون او بايروجـرام معـاً 🏌‍♂**\n\n\n"
-"`.تفعيل الكاشف الذكي`\n"
-"**⪼ بالـرد ع الشخـص او بإضافة ايـدي او يـوزر الشخـص للامـر**\n"
-"**⪼ لـ تفعيـل إشعـارات كشـف ومراقبـة حسـاب شخـص متصـل 🛜**\n\n\n"
-"`.تعطيل الكاشف الذكي`\n"
-"**⪼ لـ تعطيـل إشعـارات كشـف الشخـص المتصل بالخـاص 🛃**\n\n\n"
-"`.موقع`\n"
-"**⪼ ارسـل الامـر (.موقع + الدولة + المحافظة/المدينة + اسم محل خدمي او تجاري)**\n"
-"**⪼ مثــال (.موقع العراق بغداد المنصور مطعم الساعة)**\n"
-"**⪼ لـ جـلب صـورة مباشـرة لـ الموقـع عبـر الاقمـار الصنـاعيـة 🗺🛰**\n\n\n"
-"`.تفعيل البصمه الذاتيه`\n"
-"**⪼ لـ تفعيـل حفـظ البصمـه الذاتيـه .. تلقائياً 🎙**\n\n\n"
-"`.تعطيل البصمه الذاتيه`\n"
-"**⪼ لـ تعطيـل حفـظ البصمـه الذاتيـه .. تلقائياً 🔇**\n\n\n"
-"** رشق لايكات انستا 🖤**\n"
-"**⪼ ارسـل الامـر** ( `.بوتي` )\n"
-"**⪼ ثم اذهب الى بوت المساعد وارسل /start واختر زر رشق لايكات انستا 💘**\n"
-"**⪼ لـ رشق 50 لايك لمنشور انستا كل يوم ♾**\n\n\n"
-"** رشق مشاهدات تيك توك 👁‍🗨**\n"
-"**⪼ ارسـل الامـر** ( `.بوتي` )\n"
-"**⪼ ثم اذهب الى بوت المساعد وارسل /start واختر زر رشق مشاهدات تيك توك 👁‍🗨**\n"
-"**⪼ لـ رشق 1000 مشاهده لفيديو تيك توك كل يوم ♾**\n\n\n"
-"**⪼ ملاحظــه هامــه 💡:**\n"
-"راح يتـم اضافـة المزيـد مـن الاوامـر المدفوعـة بالتحديثـات القادمـه كـل فتـره 🏌‍♂\n\n"
-"𓆩 [𝙈𝙖𝙏𝙍𝙞𝙭 ⌁ 𝗩𝗶𝗽 🌟](t.me/VEEVVW) 𓆪"
-)
-
-@l313l.ar_cmd(pattern="المميز$")
-async def sbyshal(zzzvip):
-    if gvarstatus("ZThon_Vip") is None:
-        return await edit_or_reply(zzzvip, "**⎉╎عـذࢪاً .. ؏ـزيـزي\n⎉╎هـذا الامـر ليـس مجـانـي📵\n⎉╎للاشتـراك في الاوامـر المدفوعـة\n⎉╎تواصـل مطـور السـورس @BDB0B\n⎉╎او التواصـل مـع احـد المشرفيـن @BDB0B**")
-    zid = int(gvarstatus("ZThon_Vip"))
-    if Zel_Uid != zid:
-        return await edit_or_reply(event, "**⎉╎عـذࢪاً .. ؏ـزيـزي\n⎉╎هـذا الامـر ليـس مجـانـي📵\n⎉╎للاشتـراك في الاوامـر المدفوعـة\n⎉╎تواصـل مطـور السـورس @BDB0B\n⎉╎او التواصـل مـع احـد المشرفيـن @BDB0B**")
-    return await edit_or_reply(zzzvip, ZelzalVip_Orders)
-
-
-ZelzalViip_Orders = (
-"[ᯓ 𝙈𝙖𝙏𝙍𝙞𝙭 ⌁ 𝗩𝗶𝗽 🌟 الاوامــر المميـزة](t.me/veevvw) .\n"
-"⋆┄─┄─┄─┄┄─┄─┄─┄─┄┄⋆\n"
-"**✾╎قـائمـة اثنين من الاوامـر المميـزة الخاصـة بسـورس ماتركـس :** \n\n"
-"`.تفعيل الكاشف الذكي`\n"
-"**⪼ بالـرد ع الشخـص او بإضافة ايـدي او يـوزر الشخـص للامـر**\n"
-"**⪼ لـ تفعيـل إشعـارات كشـف ومراقبـة حسـاب شخـص متصـل 🛜**\n\n\n"
-"`.تعطيل الكاشف الذكي`\n"
-"**⪼ لـ تعطيـل إشعـارات كشـف الشخـص المتصل بالخـاص 🛃**\n\n\n"
-"`.اتصل`\n"
-"**⪼ ارسـل الامـر (.اتصل + رقـم الهاتـف)**\n"
-"**⪼ لـ عمـل سبـام اتصـال لـ اي هاتـف مـن رقـم اجنبـي 📲**\n\n\n"
-"**⪼ ملاحظــه هامــه 💡:**\n"
-"هذه اثنين اوامر مدفوعة من اصل 5 اوامر\n"
-"تم فتحها للجميع لمدة محدودة فقط (شهر) وسوف تصبح مدفوعة مرة اخرى بعد انتهاء المدة المحددة\n\n"
-"𓆩 [𝙈𝙖𝙏𝙍𝙞𝙭 ⌁ 𝗩𝗶𝗽 🌟](t.me/VEEVVW) 𓆪"
-)
-
-@l313l.ar_cmd(pattern="vip$")
-async def sbyshaal(zzzviip):
-    if gvarstatus("ZThon_Vip") is None:
-        return await edit_or_reply(zzzviip, "**⎉╎عـذࢪاً .. ؏ـزيـزي\n⎉╎هـذا الامـر ليـس مجـانـي📵\n⎉╎للاشتـراك في الاوامـر المدفوعـة\n⎉╎تواصـل مطـور السـورس @bdb0b\n⎉╎او التواصـل مـع احـد المشرفيـن @BDB0B**")
-    zid = int(gvarstatus("ZThon_Vip"))
-    if Zel_Uid != zid:
-        return await edit_or_reply(e, "**⎉╎عـذࢪاً .. ؏ـزيـزي\n⎉╎هـذا الامـر ليـس مجـانـي📵\n⎉╎للاشتـراك في الاوامـر المدفوعـة\n⎉╎تواصـل مطـور السـورس @BDB0B\n⎉╎او التواصـل مـع احـد المشرفيـن @BDB0B**")
-    else:
-        return await edit_or_reply(zzzviip, ZelzalVip_Orders)
